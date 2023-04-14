@@ -49,10 +49,8 @@ primary_region = "ams"
     restart_limit = 0
     timeout = 2000
     tls_skip_verify = false
-    [services.http_checks.headers]
   [[services.script_checks]]
-    command       = "./app/health_check.sh"
-    args          = []
+    command       = "bash /app/health_check.sh"
     grace_period  = "1s"
     interval      = "5s"
     restart_limit = 0

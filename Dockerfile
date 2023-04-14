@@ -27,4 +27,6 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV PATH /usr/local/node/bin:$PATH
 
+RUN chmod 777 health_check.sh
+
 CMD [ "npm", "run", "start" ]

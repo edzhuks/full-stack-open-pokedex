@@ -33,6 +33,22 @@ jobs:
       - name: Trigger deployment
         if: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)),'#skip') }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+      - name: Notify discord success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          text: A new version of Pokedex deployed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          description: to https://full-stack-open-part11.onrender.com by ${{github.event.pusher.name}}
+      - name: Notify discord failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          description: commit ${{github.event.head_commit.url}} by ${{github.event.head_commit.author.username}} broke the build :(
+          text: Build failed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
@@ -46,24 +62,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
-  discord_notification:
-    if: always()
-    needs: [simple_deployment_pipeline]
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Test Success
-        uses: rjstone/discord-webhook-notify@v1
-        if: success()
-        with:
-          severity: info
-          text: A new version of Pokedex deployed
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-          description: to https://full-stack-open-part11.onrender.com by ${{github.event.pusher.name}}
-      - name: Test Failure
-        uses: rjstone/discord-webhook-notify@v1
-        if: failure()
-        with:
-          severity: error
-          description: commit ${{github.event.head_commit.url}} by ${{github.event.head_commit.author.username}} broke the build :(
-          text: Build failed
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}

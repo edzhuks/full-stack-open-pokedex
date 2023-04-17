@@ -55,7 +55,8 @@ jobs:
         if: success()
         with:
           severity: info
-          details: Test Succeeded!
+          details: to https://full-stack-open-part11.onrender.com by ${{github.event.pusher.name}}
+          text: A new version of Pokedex deployed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Test Failure
         uses: rjstone/discord-webhook-notify@v1

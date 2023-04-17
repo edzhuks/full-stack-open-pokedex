@@ -47,6 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
   discord_notification:
+    if: always()
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:

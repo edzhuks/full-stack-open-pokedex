@@ -63,5 +63,6 @@ jobs:
         if: failure()
         with:
           severity: error
-          details: Test Failed!
+          description: commit ${{github.event.head_commit.url}} by ${{github.event.head_commit.author.username}} broke the build :(
+          text: Build failed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
